@@ -1,14 +1,12 @@
+import { filter } from "minimatch";
 import { useEffect, useState } from "react";
 import "./App.css";
+import CardList from "./Component/Card-list/Card-list";
+import Searchbox from "./Component/search-box/Search-box";
 
 const App = () => {
   const [monsters, setMonsters] = useState([]);
-
-  // useEffect(() => {
-  //   fetch("https://jsonplaceholder.typicode.com/users")
-  //     .then((response) => response.json())
-  //     .then((users) => setMonsters(users));
-  // }, []);
+  const [searchfield, setSearchfield] = useState("");
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -21,10 +19,22 @@ const App = () => {
     fetchApi();
   }, []);
 
+  const onSearchChange = (event) => {
+    setSearchfield(event.target.value);
+  };
+
+  const filteredMonsters = monsters.filter((monster) =>
+    monster.name.toLowerCase().includes(searchfield.toLowerCase())
+  );
+
   return (
-    <div className="App">
-      <h1>Monsters Rolodex</h1>
-    </div>
+    <>
+      <div className="App">
+        <h1>Monsters Rolodex</h1>
+        <Searchbox onSearchChange={onSearchChange} />
+        <CardList monsters={filteredMonsters} />
+      </div>
+    </>
   );
 };
 
